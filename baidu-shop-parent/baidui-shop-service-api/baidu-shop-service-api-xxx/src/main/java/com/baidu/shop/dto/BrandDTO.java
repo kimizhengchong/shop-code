@@ -15,9 +15,10 @@ import javax.validation.constraints.NotNull;
  * @author: Mr.Zheng
  * @create: 2020-08-31 20:19
  **/
-@ApiModel(value = "品牌DTO")
+@ApiModel(value = "品牌数据传输DTO")
 @Data
 public class BrandDTO extends BaseDTO {
+
     @ApiModelProperty(value = "品牌主键",example = "1")
     @NotNull(message = "主键不能为空", groups = {MingruiOperation.Update.class})
     private Integer id;
@@ -31,4 +32,8 @@ public class BrandDTO extends BaseDTO {
 
     @ApiModelProperty(value = "品牌首字母")
     private Character letter;
+
+    @ApiModelProperty(value = "品牌分类信息")
+    @NotEmpty(message = "品牌分类信息不能为空", groups = {MingruiOperation.Add.class})
+    private String category;
 }

@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
@@ -19,12 +21,12 @@ import javax.validation.constraints.NotNull;
  **/
 @Table(name = "tb_brand")
 @Data
-@ApiModel(value = "品牌实体类")
 public class BrandEntity {
 
     @Id//主键
     @ApiModelProperty(value = "品牌主键",example = "1")
     @NotNull(message = "主键不能为空",groups = {MingruiOperation.Update.class})
+    @GeneratedValue(strategy = GenerationType.IDENTITY)//使用的主键生成策略
     private Integer id;
 
     @ApiModelProperty(value = "品牌名称")
