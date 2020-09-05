@@ -29,9 +29,6 @@ public interface BrandService {
     @ApiOperation(value = "修改品牌信息")
     Result<JsonObject> editBrand(@Validated({MingruiOperation.Update.class}) @RequestBody BrandDTO brandDTO);
 
-//    @ApiOperation(value = "删除品牌")
-//    @DeleteMapping(value = "brand/del")
-//    public Result<JSONObject> del(Integer id);
 
     @ApiOperation(value = "通过id删除品牌信息")
     @DeleteMapping(value = "brand/delete")

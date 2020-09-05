@@ -21,7 +21,7 @@ import java.util.UUID;
  * @create: 2020-09-01 19:20
  **/
 @RestController
-@RequestMapping(value = "upload")
+@RequestMapping(value = "uploadImage")
 public class UploadController extends BaseApiService {
 
 

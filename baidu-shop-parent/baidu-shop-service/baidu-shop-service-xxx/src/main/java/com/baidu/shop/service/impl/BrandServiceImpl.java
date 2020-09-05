@@ -6,6 +6,7 @@ import com.baidu.shop.base.Result;
 import com.baidu.shop.dto.BrandDTO;
 import com.baidu.shop.entity.BrandEntity;
 import com.baidu.shop.entity.CategoryBrandEntity;
+import com.baidu.shop.entity.CategoryEntity;
 import com.baidu.shop.mapper.BrandMapper;
 import com.baidu.shop.mapper.CategoryBrandMapper;
 import com.baidu.shop.service.BaseApiService;
@@ -104,13 +105,16 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
     @Transactional
     @Override
     public Result<JsonObject> delete(Integer id) {
-        //通过id删除
+
+        //删除品牌
         brandMapper.deleteByPrimaryKey(id);
 
+        //删除中间表数据
         this.deleteBrandAndCategory(id);
 
-        return this.setResultSuccess();
+        return this.setResultSuccess("该品牌和中间表数据已被删除");
     }
+
 
     //删除中间表数据封装
     private void deleteBrandAndCategory(Integer id){
@@ -119,7 +123,6 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
         example.createCriteria().andEqualTo("brandId",id);
         categoryBrandMapper.deleteByExample(example);
     }
-
 
     //批量新增关系数据封装
     private void brandCategorySaveAndEidt(BrandDTO brandDTO,BrandEntity brandEntity){
@@ -136,7 +139,6 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
                     }).collect(Collectors.toList());
             //批量新增
             categoryBrandMapper.insertList(categoryBrandEntities);
-
         }else{
             //新增
             CategoryBrandEntity categoryBrandEntity = new CategoryBrandEntity();
@@ -146,6 +148,4 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
             categoryBrandMapper.insertSelective(categoryBrandEntity);
         }
     }
-
-
 }
