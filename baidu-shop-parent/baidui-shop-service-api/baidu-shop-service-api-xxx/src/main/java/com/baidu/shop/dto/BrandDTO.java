@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
  **/
 @ApiModel(value = "品牌数据传输DTO")
 @Data
-public class BrandDTO extends BaseDTO {
+public class BrandDTO extends BaseDTO{
 
     @ApiModelProperty(value = "品牌主键",example = "1")
     @NotNull(message = "主键不能为空", groups = {MingruiOperation.Update.class})
