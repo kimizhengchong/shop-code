@@ -114,6 +114,32 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
         return this.setResultSuccess();
     }
 
+    @Transactional
+    @Override
+    public Result<JSONObject> saleableGoods(Integer ids,Integer saleables) {
+        SpuEntity spuEntity = new SpuEntity();
+        spuEntity.setId(ids);
+        spuEntity.setSaleable(saleables);
+        spuMapper.updateByPrimaryKeySelective(spuEntity);
+        return this.setResultSuccess();
+    }
+
+//    @Transactional
+//    @Override
+//    public Result<JSONObject> saleableGoods(SpuDTO spuDTO) {
+//        SpuEntity spuEntity = BaiduUtil.copyProperties(spuDTO, SpuEntity.class);
+//        spuEntity.setId(spuDTO.getId());
+//        if(spuEntity.getSaleable() == 1){
+//            spuEntity.setSaleable(0);
+//            spuMapper.updateByPrimaryKeySelective(spuEntity);
+//            return this.setResultSuccess("下架成功");
+//        }else{
+//            spuEntity.setSaleable(1);
+//            spuMapper.updateByPrimaryKeySelective(spuEntity);
+//            return this.setResultSuccess("上架成功");
+//        }
+//    }
+
     //通过spuId查询sku规格参数
     private List<Long> getSkuBySpuIds(Integer spuId){
         Example example = new Example(SkuEntity.class);

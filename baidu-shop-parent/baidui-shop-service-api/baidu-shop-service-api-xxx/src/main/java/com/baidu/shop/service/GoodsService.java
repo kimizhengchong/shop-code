@@ -39,4 +39,13 @@ public interface GoodsService {
     @DeleteMapping(value = "goods/deleteGoods")
     @ApiOperation(value = "删除商品信息")
     Result<JSONObject> deleteGoods(Integer spuId);
+
+
+//    @PutMapping(value = "goods/saleable")
+//    @ApiOperation(value = "上架下架信息")
+//    Result<JSONObject> saleableGoods(@RequestBody SpuDTO spuDTO);
+
+    @GetMapping(value = "goods/saleable")
+    @ApiOperation(value = "上架下架信息")
+    Result<JSONObject> saleableGoods(Integer ids,Integer saleables);
 }

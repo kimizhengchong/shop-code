@@ -1,14 +1,16 @@
 package com.baidu.shop.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.baidu.shop.base.BaseDTO;
 import com.baidu.shop.base.Result;
 import com.baidu.shop.dto.BrandDTO;
+import com.baidu.shop.dto.SpuDTO;
 import com.baidu.shop.entity.BrandEntity;
 import com.baidu.shop.entity.CategoryBrandEntity;
-import com.baidu.shop.entity.CategoryEntity;
+import com.baidu.shop.entity.SkuEntity;
+import com.baidu.shop.entity.SpuEntity;
 import com.baidu.shop.mapper.BrandMapper;
 import com.baidu.shop.mapper.CategoryBrandMapper;
+import com.baidu.shop.mapper.SkuMapper;
+import com.baidu.shop.mapper.SpuMapper;
 import com.baidu.shop.service.BaseApiService;
 import com.baidu.shop.service.BrandService;
 import com.baidu.shop.utils.BaiduUtil;
@@ -19,12 +21,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.JsonObject;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,6 +43,10 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
 
     @Resource
     private CategoryBrandMapper categoryBrandMapper;
+
+    @Resource
+    private SpuMapper spuMapper;
+
 
     @Override
     public Result<List<BrandEntity>> getBrandByCategory(Integer cid) {
@@ -119,6 +123,13 @@ public class BrandServiceImpl extends BaseApiService implements BrandService {
     @Transactional
     @Override
     public Result<JsonObject> delete(Integer id) {
+
+        Example example = new Example(SpuEntity.class);
+
+        example.createCriteria().andEqualTo("brandId",id);
+
+        List<SpuEntity> list = spuMapper.selectByExample(example);
+        if(list.size() > 0) return this.setResultError("该品牌已被商品绑定不能被删除");
 
         //删除品牌
         brandMapper.deleteByPrimaryKey(id);
