@@ -10,6 +10,7 @@ import com.baidu.shop.mapper.*;
 import com.baidu.shop.service.BaseApiService;
 import com.baidu.shop.service.BrandService;
 import com.baidu.shop.service.GoodsService;
+import com.baidu.shop.status.HTTPStatus;
 import com.baidu.shop.utils.BaiduUtil;
 import com.baidu.shop.utils.ObjectUtil;
 import com.baidu.shop.utils.StringUtil;
@@ -190,12 +191,12 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
 
     //查询
     @Override
-    public Result<PageInfo<SpuEntity>> getSpuInfo(SpuDTO spuDTO) {
+    public Result<List<SpuDTO>> getSpuInfo(SpuDTO spuDTO) {
 
         //分页
-          if (ObjectUtil.isNotNull(spuDTO.getPage()) && ObjectUtil.isNotNull(spuDTO.getRows())){
-              PageHelper.startPage(spuDTO.getPage(),spuDTO.getRows());
-          }
+        if (ObjectUtil.isNotNull(spuDTO.getPage()) && ObjectUtil.isNotNull(spuDTO.getRows())){
+            PageHelper.startPage(spuDTO.getPage(),spuDTO.getRows());
+        }
         //构建条件查询
         Example example = new Example(SpuEntity.class);
         //构建查询条件
@@ -229,7 +230,7 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
             }
             //分类名称
             String categoryName = categoryMapper.selectByIdList(
-                Arrays.asList(spuDTO1.getCid1(),spuDTO1.getCid2(),spuDTO1.getCid3()))
+                    Arrays.asList(spuDTO1.getCid1(),spuDTO1.getCid2(),spuDTO1.getCid3()))
                     .stream().map(category -> category.getName()).collect(Collectors.joining("/"));
             spuDTO1.setCategoryName(categoryName);
             return spuDTO1;
@@ -237,10 +238,6 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
 
         PageInfo<SpuEntity> info = new PageInfo<>(list);
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("list",spuDTOList);
-        map.put("total",info.getTotal());
-
-        return this.setResultSuccess(map);
+        return this.setResult(HTTPStatus.OK,String.valueOf(info.getTotal()),spuDTOList);
     }
 }
