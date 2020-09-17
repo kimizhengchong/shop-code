@@ -85,7 +85,7 @@ public class SpecGroupImpl extends BaseApiService implements SpecGroupService {
     //===================================================参数实现类
 
     @Override
-    public Result<SpecParamEntity> getSpecParamList(SpecParamDTO specParamDTO) {
+    public Result<List<SpecParamEntity>> getSpecParamList(SpecParamDTO specParamDTO) {
 
         Example example = new Example(SpecParamEntity.class);
         Example.Criteria criteria = example.createCriteria();
