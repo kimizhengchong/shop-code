@@ -22,7 +22,7 @@ public interface BrandService {
 
     @ApiOperation(value = "获取品牌信息")
     @GetMapping(value = "brand/getBrandInfo")
-    public Result<PageInfo<BrandEntity>> getBrandInfo(BrandDTO brandDTO);
+    Result<PageInfo<BrandEntity>> getBrandInfo(BrandDTO brandDTO);
 
 
     @ApiOperation(value = "新增品牌信息")
@@ -41,5 +41,9 @@ public interface BrandService {
     @GetMapping(value = "brand/getBrandByCategory")
     @ApiOperation(value = "通过分类信息查询品牌")
     Result<List<BrandEntity>> getBrandByCategory(Integer cid);
+
+    @GetMapping(value = "brand/getBrandByIds")
+    @ApiOperation(value = "通过id集合查询品牌")
+    Result<List<BrandEntity>> getBrandByIds(@RequestParam String brandIds);
 
 }

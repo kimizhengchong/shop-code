@@ -184,7 +184,7 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
         spuDetailEntity.setSpuId(spuEntityId);
         spuDetaliMapper.insertSelective(spuDetailEntity);
         //新增sku、
-        this.addSkuAndStock(spuDTO.getSkus(),spuDTO.getId(),date);
+        this.addSkuAndStock(spuDTO.getSkus(),spuEntity.getId(),date);
 
         return this.setResultSuccess();
     }
