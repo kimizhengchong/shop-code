@@ -26,7 +26,7 @@ import java.util.List;
  * @create: 2020-09-03 12:00
  **/
 @RestController
-public class SpecGroupImpl extends BaseApiService implements SpecGroupService {
+public class SpecGroupServiceImpl extends BaseApiService implements SpecGroupService {
 
     @Resource
     private SpecGroupMapper specGroupMapper;
@@ -95,6 +95,9 @@ public class SpecGroupImpl extends BaseApiService implements SpecGroupService {
         }
         if(ObjectUtil.isNotNull(specParamDTO.getCid())){
             criteria.andEqualTo("cid",specParamDTO.getCid());
+        }
+        if (ObjectUtil.isNotNull(specParamDTO.getSearching())) {
+            criteria.andEqualTo("searching",specParamDTO.getSearching());
         }
 
         List<SpecParamEntity> list = specParamMapper.selectByExample(example);
