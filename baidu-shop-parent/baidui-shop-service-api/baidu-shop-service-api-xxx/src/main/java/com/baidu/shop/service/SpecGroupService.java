@@ -6,7 +6,7 @@ import com.baidu.shop.dto.SpecGroupDTO;
 import com.baidu.shop.dto.SpecParamDTO;
 import com.baidu.shop.entity.SpecGroupEntity;
 import com.baidu.shop.entity.SpecParamEntity;
-import com.baidu.shop.validate.group.MingruiOperation;
+import com.baidu.shop.group.MingruiOperation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.SpringQueryMap;
@@ -20,7 +20,7 @@ public interface SpecGroupService {
 
     @ApiOperation(value = "通过条件查询规格组")
     @GetMapping(value = "specgroup/list")
-    Result<List<SpecGroupEntity>> getSpecGroup(SpecGroupDTO specGroupDTO);
+    Result<List<SpecGroupEntity>> getSpecGroup(@SpringQueryMap SpecGroupDTO specGroupDTO);
 
     @ApiOperation(value = "新增规格组")
     @PostMapping(value = "specgroup/add")

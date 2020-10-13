@@ -1,12 +1,14 @@
 package com.baidu.shop.dto;
 
-import com.baidu.shop.validate.group.MingruiOperation;
+import com.baidu.shop.entity.SpecParamEntity;
+import com.baidu.shop.group.MingruiOperation;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @program: baidu-shop-parent
@@ -29,4 +31,8 @@ public class SpecGroupDTO {
     @ApiModelProperty(value = "规格名称")
     @NotEmpty(message = "规格名称不能为空",groups = {MingruiOperation.Add.class})
     private String name;
+
+    @ApiModelProperty(value = "参数集合")
+    @NotEmpty(message = "泛型是规格参数集合",groups = {MingruiOperation.Add.class})
+    private List<SpecParamEntity> specParams;
 }

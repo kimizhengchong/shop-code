@@ -1,13 +1,10 @@
 package com.baidu.shop.dto;
 
-import com.baidu.shop.validate.group.MingruiOperation;
-import io.swagger.annotations.Api;
+import com.baidu.shop.group.MingruiOperation;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 

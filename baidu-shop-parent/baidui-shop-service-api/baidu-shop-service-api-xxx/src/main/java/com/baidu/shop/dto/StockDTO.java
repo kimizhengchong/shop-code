@@ -3,10 +3,6 @@ package com.baidu.shop.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.springframework.validation.annotation.Validated;
-
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 /**
  * @program: baidu-shop-parent

@@ -1,14 +1,13 @@
 package com.baidu.shop.validate.group;
 
 /**
- * @program: baidu-shop-parent
- * @description:
- * @author: Mr.Zheng
- * @create: 2020-08-31 14:46
+ * @ClassName MingruiOperation
+ * @Description: TODO
+ * @Author Mr.Zheng
+ * @Date 2020-09-25 20:55
+ * @Version V1.0
  **/
 public class MingruiOperation {
-
-    public interface Add{}
-    public interface Update{}
-    public interface Search{}
+    public interface add{};
+    public interface update{};
 }

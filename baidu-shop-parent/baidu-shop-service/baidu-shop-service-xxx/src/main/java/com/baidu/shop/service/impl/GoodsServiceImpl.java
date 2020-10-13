@@ -1,15 +1,17 @@
 package com.baidu.shop.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baidu.shop.component.MrRabbitMQ;
+import com.baidu.shop.constant.MqMessageConstant;
+import com.baidu.shop.mapper.*;
 import com.baidu.shop.base.Result;
 import com.baidu.shop.dto.BrandDTO;
 import com.baidu.shop.dto.SkuDTO;
 import com.baidu.shop.dto.SpuDTO;
-import com.baidu.shop.entity.*;
-import com.baidu.shop.mapper.*;
 import com.baidu.shop.service.BaseApiService;
 import com.baidu.shop.service.BrandService;
 import com.baidu.shop.service.GoodsService;
+import com.baidu.shop.entity.*;
 import com.baidu.shop.status.HTTPStatus;
 import com.baidu.shop.utils.BaiduUtil;
 import com.baidu.shop.utils.ObjectUtil;
@@ -53,6 +55,9 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
     @Resource
     private StockMapper stockMapper;
 
+    @Autowired
+    private MrRabbitMQ mrRabbitMQ;
+
     //修改大字段回显
     @Override
     public Result<SpuDetailEntity> getDetailBySpuId(Integer spuId) {
@@ -68,9 +73,16 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
     }
 
     //修改
-    @Transactional
     @Override
     public Result<JSONObject> editGoods(SpuDTO spuDTO) {
+
+        this.editGoodsTranscation(spuDTO);
+        mrRabbitMQ.send(spuDTO.getId() + "", MqMessageConstant.SPU_ROUT_KEY_UPDATE);
+        return this.setResultSuccess();
+    }
+
+    @Transactional
+    public void editGoodsTranscation(SpuDTO spuDTO){
         //修改spu
         Date date = new Date();
         SpuEntity spuEntity = BaiduUtil.copyProperties(spuDTO, SpuEntity.class);
@@ -89,16 +101,22 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
         List<SkuDTO> skus = spuDTO.getSkus();
 
         this.addSkuAndStock(spuDTO.getSkus(),spuDTO.getId(),date);
-
-        return this.setResultSuccess();
     }
 
     //删除
-    @Transactional
     @Override
     public Result<JSONObject> deleteGoods(Integer spuId) {
 
         if(ObjectUtil.isNull(spuId)) return setResultError("不能被删除");
+
+        this.deleteGoodsTranscation(spuId);
+        mrRabbitMQ.send(spuId + "", MqMessageConstant.SPU_ROUT_KEY_DELETE);
+        return this.setResultSuccess();
+    }
+
+    @Transactional
+    public void deleteGoodsTranscation(Integer spuId){
+
         //删除spu
         spuMapper.deleteByPrimaryKey(spuId);
         //删除spuDetail
@@ -112,8 +130,8 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
             //删除库存
             stockMapper.deleteByIdList(skuArr);
         }
-        return this.setResultSuccess();
     }
+
 
     @Transactional
     @Override
@@ -167,9 +185,19 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
     }
 
     //新增
-    @Transactional
     @Override
     public Result<JSONObject> saveGoods(SpuDTO spuDTO) {
+
+
+        Integer spuId = this.saveGoodsTranscation(spuDTO);
+
+        //发送消息
+        mrRabbitMQ.send(spuId + "", MqMessageConstant.SPU_ROUT_KEY_SAVE);
+        return this.setResultSuccess();
+    }
+
+    @Transactional
+    public Integer saveGoodsTranscation(SpuDTO spuDTO){
         Date date = new Date();
         //新增spu
         SpuEntity spuEntity = BaiduUtil.copyProperties(spuDTO, SpuEntity.class);
@@ -185,8 +213,7 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
         spuDetaliMapper.insertSelective(spuDetailEntity);
         //新增sku、
         this.addSkuAndStock(spuDTO.getSkus(),spuEntity.getId(),date);
-
-        return this.setResultSuccess();
+        return spuEntity.getId();
     }
 
     //查询
@@ -206,6 +233,9 @@ public class GoodsServiceImpl extends BaseApiService implements GoodsService {
         }
         if(ObjectUtil.isNotNull(spuDTO.getSaleable()) && spuDTO.getSaleable() != 2){
             criteria.andEqualTo("saleable",spuDTO.getSaleable());
+        }
+        if (ObjectUtil.isNotNull(spuDTO.getId())){
+            criteria.andEqualTo("id",spuDTO.getId());
         }
         //排序
         if (ObjectUtil.isNotNull(spuDTO.getSort())){

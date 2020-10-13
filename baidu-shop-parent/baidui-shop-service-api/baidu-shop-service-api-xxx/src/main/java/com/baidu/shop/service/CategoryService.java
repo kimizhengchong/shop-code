@@ -3,7 +3,7 @@ package com.baidu.shop.service;
 import com.alibaba.fastjson.JSONObject;
 import com.baidu.shop.base.Result;
 import com.baidu.shop.entity.CategoryEntity;
-import com.baidu.shop.validate.group.MingruiOperation;
+import com.baidu.shop.group.MingruiOperation;
 import com.google.gson.JsonObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

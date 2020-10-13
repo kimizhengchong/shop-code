@@ -1,7 +1,6 @@
 package com.baidu.shop.mapper;
 
 import com.baidu.shop.entity.BrandEntity;
-import com.baidu.shop.service.BrandService;
 import org.apache.ibatis.annotations.Select;
 import tk.mybatis.mapper.additional.idlist.SelectByIdListMapper;
 import tk.mybatis.mapper.common.Mapper;

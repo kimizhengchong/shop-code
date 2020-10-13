@@ -4,9 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 /**
  * @program: baidu-shop-parent
  * @description:
