@@ -5,12 +5,13 @@ import com.baidu.shop.base.Result;
 import com.baidu.shop.dto.UserDTO;
 import com.baidu.shop.entity.UserEntity;
 import com.baidu.shop.mapper.UserMapper;
+import com.baidu.shop.redis.repository.RedisRepository;
 import com.baidu.shop.service.BaseApiService;
 import com.baidu.shop.service.UserService;
 import com.baidu.shop.utils.BCryptUtil;
 import com.baidu.shop.utils.BaiduUtil;
-import com.baidu.shop.utils.LuosimaoDuanxinUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Example;
 
@@ -31,6 +32,17 @@ public class UserServiceImpl extends BaseApiService implements UserService {
 
     @Resource
     private UserMapper userMapper;
+
+    @Autowired
+    private RedisRepository redisRepository;
+
+
+    @Override
+    public Result<JSONObject> checkValidCode(String phone, String code) {
+        String redisValidCode = redisRepository.get("valid-code-" + phone);
+        if (!code.equals(redisValidCode)) return this.setResultError("验证码输入错误");
+        return this.setResultSuccess();
+    }
 
     @Override
     public Result<JSONObject> register(UserDTO userDTO) {
@@ -66,14 +78,17 @@ public class UserServiceImpl extends BaseApiService implements UserService {
 
         //生成随机的六位验证码
         String code = (int)((Math.random() * 9 + 1) * 100000) +"";
+        //打印发送的验证码信息
+        log.debug("向手机号:{} 发送验证码:{}",userDTO.getPhone(),code);
         //发送短信验证码
         //LuosimaoDuanxinUtil.SendCode(userDTO.getPhone(),code);
 
         //语音验证码
         //LuosimaoDuanxinUtil.sendSpeak(userDTO.getPhone(),code);
 
-        //打印发送的验证码信息
-        log.debug("向手机号:{} 发送验证码:{}",userDTO.getPhone(),code);
+        redisRepository.set("valid-code-" + userDTO.getPhone(),code);
+
+        redisRepository.expire("valid-code-" + userDTO.getPhone(),120);
 
         return this.setResultSuccess();
     }
