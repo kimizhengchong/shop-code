@@ -62,6 +62,16 @@ logging:
     # 打印与我们程序相关的日志信息
     com.baidu.shop: debug
 
+#公私钥的配置信息
+mrshop:
+  jwt:
+    secret: mingrui # 登录校验的密钥
+    pubKeyPath: D:\Com.MingRui.Zc\zhengchong_projects\jwt\rea.pub # 公钥地址,理论上应该有对应linux的地址
+    priKeyPath: D:\Com.MingRui.Zc\zhengchong_projects\jwt\rea.pri # 私钥地址
+    expire: 30 # tocken有效时间,单位分钟
+    cookieName: MRSHOP_TOKEN #cookie名称
+    cookieMaxAge: 1800 #cookie有效时间，单位为秒
+
 # eureka配置
 eureka:
   client:
